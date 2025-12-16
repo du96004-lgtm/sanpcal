@@ -1,11 +1,18 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { FoodEntry } from '../types';
 
-// Initialize the client
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-
 export const analyzeFoodImage = async (base64Image: string): Promise<Omit<FoodEntry, 'id' | 'timestamp' | 'imageUrl'>> => {
   try {
+    // Initialize client lazily to avoid 'process is not defined' error during initial page load
+    const apiKey = process.env.API_KEY;
+    if (!apiKey) {
+        console.warn("API Key is missing from process.env.API_KEY");
+        // In a real build, we'd throw here, but for now we let the SDK throw if it wants, 
+        // or the UI will catch the error below.
+    }
+    
+    const ai = new GoogleGenAI({ apiKey: apiKey || '' });
+
     // Remove header if present (e.g., "data:image/jpeg;base64,")
     const cleanBase64 = base64Image.replace(/^data:image\/(png|jpeg|jpg|webp);base64,/, '');
 
