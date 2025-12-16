@@ -16,6 +16,10 @@ const Scanner: React.FC<ScannerProps> = ({ onCapture, onClose, isAnalyzing }) =>
 
   const startCamera = useCallback(async () => {
     try {
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        throw new Error("Camera API not available");
+      }
+
       const constraints = {
         video: {
           facingMode: 'environment', // Use back camera
@@ -30,7 +34,7 @@ const Scanner: React.FC<ScannerProps> = ({ onCapture, onClose, isAnalyzing }) =>
       }
     } catch (err) {
       console.error("Camera access denied:", err);
-      setError('Unable to access camera. Please allow permissions.');
+      setError('Unable to access camera. Please allow permissions and ensure you are using HTTPS.');
     }
   }, []);
 
@@ -42,8 +46,13 @@ const Scanner: React.FC<ScannerProps> = ({ onCapture, onClose, isAnalyzing }) =>
   }, [stream]);
 
   useEffect(() => {
-    startCamera();
+    let mounted = true;
+    startCamera().then(() => {
+      if (!mounted) stopCamera();
+    });
+    
     return () => {
+      mounted = false;
       stopCamera();
     };
   }, [startCamera, stopCamera]);

@@ -1,7 +1,7 @@
 import React from 'react';
 import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
 import { FoodEntry, DailyStats } from '../types';
-import { Flame, Droplet, Wheat, Dumbbell, Plus } from 'lucide-react';
+import { Flame, Droplet, Wheat, Dumbbell } from 'lucide-react';
 
 interface DashboardProps {
   stats: DailyStats;
