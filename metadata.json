@@ -1,0 +1,7 @@
+{
+  "name": "SnapCal - AI Calorie Tracker",
+  "description": "Instantly track your calories by scanning your food with AI.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
